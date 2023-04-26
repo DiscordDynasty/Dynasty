@@ -425,6 +425,8 @@ MonoBehaviour:
     obj: {fileID: 21300000, guid: 43b4ed1c01ba04d4db7750c3cdf9fbd7, type: 3}
   - ID: AbilitySprite28
     obj: {fileID: 21300000, guid: e54273b05980c67499cc83bf24b46122, type: 3}
+  - ID: absorption_sprite
+    obj: {fileID: 21300000, guid: 18fb550266cdd2e409962be44e8d481b, type: 3}
   - ID: AbilitySprite29
     obj: {fileID: 21300000, guid: 42ac14420c307eb4f9d42baea222ebc3, type: 3}
   - ID: AbilitySprite30
@@ -441,10 +443,10 @@ MonoBehaviour:
     obj: {fileID: 1630319593119418, guid: 52571bb5e367c5f419f3a56eaedd3020, type: 3}
   - ID: New 4 Entry
     obj: {fileID: 1630319593119418, guid: ba9d59973ddacc242b52bf894b884466, type: 3}
-  - ID: music_sloppy_remix
-    obj: {fileID: 8300000, guid: f97ccf6700db8fc4d88f01039e6960f4, type: 3}
   - ID: RectangleEffectScript_skin0
     obj: {fileID: 2100000, guid: 37f63c819ae6c274d8ed924fc281a206, type: 2}
+  - ID: music_sloppy_remix
+    obj: {fileID: 8300000, guid: f97ccf6700db8fc4d88f01039e6960f4, type: 3}
   - ID: RectangleEffectScript_skin1
     obj: {fileID: 2100000, guid: ee176e77294fb5045a1b774fe09d0ca7, type: 2}
   - ID: New 1 Entry Ghost
@@ -598,7 +600,7 @@ MonoBehaviour:
   - ID: clip_unload
     obj: {fileID: 8300000, guid: 17cd4ce7340f46211a59e832aff0d698, type: 3}
   - ID: AbilitySprite16
-    obj: {fileID: 2800000, guid: 243d9a19e26eda6409adccdeafcef620, type: 3}
+    obj: {fileID: 21300000, guid: 61dd13f7f3dcc4140952bb98f976a1b2, type: 3}
   - ID: clip_disrupt
     obj: {fileID: 8300000, guid: 9e174542003196242a98b3159bcdfa60, type: 3}
   - ID: AbilitySprite14
@@ -705,7 +707,45 @@ MonoBehaviour:
     obj: {fileID: 7512739887134545507, guid: eb12ec4567aa260e5a4c44ffa2614e7f, type: 3}
   - ID: area_restore_effect
     obj: {fileID: 1953646506744037370, guid: a6185c874aaba800baaa0736caefb92e, type: 3}
-  - ID: absorb_prefab
-    obj: {fileID: 4103897406228742222, guid: fbaaf9381f68e08a5b3e4b3c74bf8157, type: 3}
-  - ID: strong_bullet_hit
-    obj: {fileID: 8117088640925686289, guid: d8cb3c9228c6899ea985a27ab9c90300, type: 3}
+  - ID: AbilitySprite47
+    obj: {fileID: 21300000, guid: ce8107b5fa98dd142b0907ef1add9d58, type: 3}
+  - ID: clip_spike
+    obj: {fileID: 8300000, guid: bc999a8fea1c2ec4990bcc75aca98d19, type: 3}
+  - ID: AbilitySprite48
+    obj: {fileID: 21300000, guid: eb2ef4cb3bf9c21418416d7161bae946, type: 3}
+  - ID: clip_cruiserbeam
+    obj: {fileID: 8300000, guid: 9f283eaad113c1146bf453e27a01ee9d, type: 3}
+  - ID: AbilitySprite49
+    obj: {fileID: 21300000, guid: 6da4a4cb24ffb7f428510a5b583aa831, type: 3}
+  - ID: clip_cruiserbullet
+    obj: {fileID: 8300000, guid: 3b3d54be724ebbc4d8fcc11972a12374, type: 3}
+  - ID: AbilitySprite50
+    obj: {fileID: 21300000, guid: d7cbcf8e6bdc6f24986742c2cb045478, type: 3}
+  - ID: clip_cruisercannon
+    obj: {fileID: 8300000, guid: 698ad7fb62959d04d86f44884547d0f1, type: 3}
+  - ID: AbilitySprite51
+    obj: {fileID: 21300000, guid: b6c855225a069fe498875dc2a5f21218, type: 3}
+  - ID: clip_mauler
+    obj: {fileID: 8300000, guid: cd134cb116217284ebb4af308b406ee7, type: 3}
+  - ID: AbilitySprite52
+    obj: {fileID: 21300000, guid: 2f3f0bae83db4e04c986dc01fbba3959, type: 3}
+  - ID: clip_chaingun
+    obj: {fileID: 8300000, guid: 730f4fa3f5714924497e29d65f0c3827, type: 3}
+  - ID: AbilitySprite53
+    obj: {fileID: 21300000, guid: 121ca53d11a6e31498ff8900ac54fde8, type: 3}
+  - ID: clip_scattergun
+    obj: {fileID: 8300000, guid: a5060bfa9a865b7449f48374f409520c, type: 3}
+  - ID: clip_scatterexplosion
+    obj: {fileID: 8300000, guid: a5060bfa9a865b7449f48374f409520c, type: 3}
+  - ID: AbilitySprite54
+    obj: {fileID: 21300000, guid: 3c452c22a949a1142aadb1175dffcdde, type: 3}
+  - ID: clip_behead
+    obj: {fileID: 8300000, guid: ce67dabc32ee1894c8949fd9fc93b0ed, type: 3}
+  - ID: AbilitySprite55
+    obj: {fileID: 21300000, guid: d26ff308bff06b94e91d5090b3f58f95, type: 3}
+  - ID: clip_backstab
+    obj: {fileID: 8300000, guid: c6b9c8d319ead3443bd3b11822a5239e, type: 3}
+  - ID: AbilitySprite56
+    obj: {fileID: 21300000, guid: c945109d6d16d18418a4b040166631db, type: 3}
+  - ID: clip_finish
+    obj: {fileID: 8300000, guid: 2fcb5ae53f7ba7f4a9d375a72f5a597c, type: 3}

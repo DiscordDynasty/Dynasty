@@ -13,7 +13,7 @@ public class AbsorptionField : ActiveAbility
         base.Awake(); // base awake
         ID = AbilityID.Absorb;
         cooldownDuration = 10;
-        activeDuration = 1;
+        activeDuration = 0.1f * abilityTier;
         energyCost = 100;
     }
 
@@ -48,7 +48,6 @@ public class AbsorptionField : ActiveAbility
     {
         if (craft)
         {
-            craft.entityBody.velocity = Vector2.zero;
             craft.absorptions++;
             Instantiate(ResourceManager.GetAsset<GameObject>("absorb_prefab"), Core.transform);
         }

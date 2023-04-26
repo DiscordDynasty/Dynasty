@@ -7,7 +7,7 @@ public class PinDown : ActiveAbility
 {
     Craft target;
     const float range = 15f;
-    float rangeSquared = range * range;
+    //float rangeSquared = range * range;
     private static float PINDOWN_ACTIVE_DURATION = 5f;
 
     public override float GetRange()
@@ -67,35 +67,7 @@ public class PinDown : ActiveAbility
     /// </summary>
     protected override void Execute()
     {
-        ActivationCosmetic(transform.position);
-        target = null;
-        float minDist = rangeSquared;
-        var targetTransform = Core.GetTargetingSystem().GetTarget();
-
-        if (targetTransform)
-        {
-            var targetTransformDist = (targetTransform.position - Core.transform.position).sqrMagnitude;
-            if (targetTransformDist < minDist && ValidityCheck(targetTransform.GetComponent<Entity>()))
-            {
-                target = targetTransform.GetComponent<Entity>() as Craft;
-            }
-        }
-
-
-        if (!target)
-            for (int i = 0; i < AIData.entities.Count; i++)
-            {
-                if (ValidityCheck(AIData.entities[i]))
-                {
-                    float d = (Core.transform.position - AIData.entities[i].transform.position).sqrMagnitude;
-                    if (d < minDist)
-                    {
-                        minDist = d;
-                        target = AIData.entities[i] as Craft;
-                    }
-                }
-            }
-
+        target = Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, false).GetComponent<Entity>() as Craft;
         if (target != null)
         {
             target.AddPin();
@@ -104,14 +76,43 @@ public class PinDown : ActiveAbility
         }
 
         base.Execute();
-
     }
 
 
+    /*private Transform ReturnPrioritizedTarget()
+    {
+        var highestHealth = 0f;
+        Transform target = null;
+        var rangePow = Mathf.Pow(range, 2);
+        var core = Core.transform.position.sqrMagnitude;
+        Transform coreTargeting = Core.GetTargetingSystem().GetTarget();
+        if (coreTargeting != null && Core is PlayerCore)
+        {
+            return coreTargeting;
+        }
+        for (int i = 0; AIData.entities.Count > i; i++)
+        {
+            var scan = AIData.entities[i].transform;
+            var scanHealth = scan.GetComponent<Entity>().GetMaxHealth()[0] + scan.GetComponent<Entity>().GetMaxHealth()[1];
+            if (ValidityCheck(scan.GetComponent<Entity>()) && core - scan.position.sqrMagnitude < rangePow)
+            {
+                if (scanHealth > highestHealth)
+                {
+                    highestHealth = scanHealth;
+                    target = scan;
+                }
+                if (scanHealth == highestHealth && core - scan.position.sqrMagnitude < core - target.position.sqrMagnitude)
+                {
+                    target = scan;
+                }
+            }
+        }
+        return target;
+    }
 
     bool ValidityCheck(Entity ent)
     {
         return (ent is Craft && !ent.GetIsDead() && !FactionManager.IsAllied(ent.faction, Core.faction) && !ent.IsInvisible);
-    }
+    }*/
 
 }
