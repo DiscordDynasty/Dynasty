@@ -67,7 +67,7 @@ public class PinDown : ActiveAbility
     /// </summary>
     protected override void Execute()
     {
-        target = Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, false).GetComponent<Entity>() as Craft;
+        target = Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, 0, -1, -1, false, this.transform).GetComponent<Entity>() as Craft;
         if (target != null)
         {
             target.AddPin();
