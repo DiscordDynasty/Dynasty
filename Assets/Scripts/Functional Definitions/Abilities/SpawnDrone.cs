@@ -21,13 +21,14 @@ public class SpawnDrone : ActiveAbility
     public DroneSpawnData spawnData;
     EntityBlueprint blueprint;
     IOwner craft;
-
+    float abilityTierf;
     public void Init()
     {
         ID = AbilityID.SpawnDrone;
         cooldownDuration = spawnData.cooldown;
         chargeDuration = spawnData.delay;
         activeDuration = spawnData.delay + 0.1f;
+         
         energyCost = spawnData.energyCost;
         // create blueprint from string json in spawn data
         blueprint = ScriptableObject.CreateInstance<EntityBlueprint>();
@@ -41,6 +42,7 @@ public class SpawnDrone : ActiveAbility
         {
             Init();
         }
+        
     }
 
     protected override void Start()
@@ -66,6 +68,7 @@ public class SpawnDrone : ActiveAbility
             craft = Core as IOwner;
         }
         base.Start();
+        abilityTierf = abilityTier;
     }
 
     /// <summary>
@@ -76,44 +79,53 @@ public class SpawnDrone : ActiveAbility
         AudioManager.PlayClipByID("clip_respawn", transform.position);
 
         // Spawn the drone
-        GameObject go = new GameObject(blueprint.name);
-        Drone drone = go.AddComponent<Drone>();
-        drone.blueprint = blueprint;
-        drone.faction = craft.GetFaction();
-        drone.transform.position = part.transform.position;
-        drone.spawnPoint = part.transform.position;
-        drone.type = spawnData.type;
-        if (MasterNetworkAdapter.mode != MasterNetworkAdapter.NetworkMode.Off)
-            drone.blueprintString = JsonUtility.ToJson(blueprint);
-        drone.SetOwner(craft);
-        drone.Init();
-        craft.GetSectorManager().InsertPersistentObject(drone.blueprint.name, go);
-        if (SectorManager.instance && SectorManager.instance.GetComponentInChildren<BattleZoneManager>())
+        for (int i = 0; i < Mathf.Ceil(abilityTierf/5); i++)
         {
-            var stats = SectorManager.instance.GetComponentInChildren<BattleZoneManager>().stats.Find(s => s.faction == Core.faction);
-            if (stats == null)
+            if (craft is PlayerCore player && craft.GetUnitsCommanding().Count + 1 > craft.GetTotalCommandLimit())
             {
-                stats = new BattleZoneManager.Stats(Core.faction);
-                SectorManager.instance.GetComponentInChildren<BattleZoneManager>().stats.Add(stats);
+                player.alerter.showMessage("Unit limit reached!", "clip_alert");
+                break;
             }
-            stats.droneSpawns++;
-        }
 
-        if (craft is ICarrier || craft is AirWeaponStation || craft is GroundWeaponStation)
-        {
-            drone.getAI().setMode(AirCraftAI.AIMode.Path);
-            drone.GeneratePath();
-        }
-        else
-        {
-            if (drone.type != DroneType.Worker)
+            GameObject go = new GameObject(blueprint.name);
+            Drone drone = go.AddComponent<Drone>();
+            drone.blueprint = blueprint;
+            drone.faction = craft.GetFaction();
+            drone.transform.position = part.transform.position;
+            drone.spawnPoint = part.transform.position;
+            drone.type = spawnData.type;
+            if (MasterNetworkAdapter.mode != MasterNetworkAdapter.NetworkMode.Off)
+                drone.blueprintString = JsonUtility.ToJson(blueprint);
+            drone.SetOwner(craft);
+            drone.Init();
+            craft.GetSectorManager().InsertPersistentObject(drone.blueprint.name, go);
+            if (SectorManager.instance && SectorManager.instance.GetComponentInChildren<BattleZoneManager>())
             {
-                drone.getAI().follow(craft.GetTransform());
+                var stats = SectorManager.instance.GetComponentInChildren<BattleZoneManager>().stats.Find(s => s.faction == Core.faction);
+                if (stats == null)
+                {
+                    stats = new BattleZoneManager.Stats(Core.faction);
+                    SectorManager.instance.GetComponentInChildren<BattleZoneManager>().stats.Add(stats);
+                }
+                stats.droneSpawns++;
+            }
+
+            if (craft is ICarrier || craft is AirWeaponStation || craft is GroundWeaponStation)
+            {
+                drone.getAI().setMode(AirCraftAI.AIMode.Path);
+                drone.GeneratePath();
             }
             else
             {
-                drone.getAI().setMode(AirCraftAI.AIMode.Tractor);
-                drone.getAI().owner = craft;
+                if (drone.type != DroneType.Worker)
+                {
+                    drone.getAI().follow(craft.GetTransform());
+                }
+                else
+                {
+                    drone.getAI().setMode(AirCraftAI.AIMode.Tractor);
+                    drone.getAI().owner = craft;
+                }
             }
         }
     }

@@ -12,7 +12,7 @@ public class Stealth : ActiveAbility
         base.Awake(); // base awake
         ID = AbilityID.Stealth;
         cooldownDuration = 10;
-        activeDuration = 4;
+        activeDuration = 0.2f * abilityTier;
         energyCost = 100;
     }
 
@@ -50,7 +50,7 @@ public class Stealth : ActiveAbility
         {
             // change visibility
             craft.StealthStacks++;
-            AudioManager.PlayClipByID("clip_activateability", transform.position);
+            AudioManager.PlayClipByID("clip_stealth", transform.position);
             base.Execute();
         }
     }

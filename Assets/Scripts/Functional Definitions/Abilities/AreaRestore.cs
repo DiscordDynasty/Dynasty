@@ -4,7 +4,7 @@
 /// </summary>
 public class AreaRestore : Ability
 {
-    const float range = 10;
+    private float range;
     public const float heal = 1000;
 
     public override float GetRange()
@@ -19,6 +19,7 @@ public class AreaRestore : Ability
         ID = AbilityID.AreaRestore;
         energyCost = 150;
         cooldownDuration = 10;
+        range = abilityTier;
     }
 
     private GameObject areaRestoreEffectPrefab;
@@ -40,6 +41,7 @@ public class AreaRestore : Ability
     protected override void Execute()
     {
         ActivationCosmetic(transform.position);
+        Core.TakeShellDamage(heal * abilityTier, 0, GetComponentInParent<Entity>());
         for (int i = 0; i < AIData.entities.Count; i++)
         {
             if (AIData.entities[i] == Core) continue;
