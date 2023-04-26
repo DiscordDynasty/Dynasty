@@ -7,7 +7,6 @@
 public abstract class Ability : MonoBehaviour
 {
     Entity core; // craft that uses this ability
-
     public Entity Core
     {
         get
@@ -74,11 +73,6 @@ public abstract class Ability : MonoBehaviour
 
     public virtual void SetTier(int abilityTier)
     {
-        if (abilityTier > 3 || abilityTier < 0)
-        {
-            Debug.LogWarning("An ability tier was set out of bounds! number: " + abilityTier);
-        }
-
         this.abilityTier = abilityTier;
     }
 
@@ -464,6 +458,16 @@ public abstract class Ability : MonoBehaviour
     virtual public float GetRange()
     {
         return -1; // get range
+    }
+
+    virtual public float GetShootdownRange()
+    {
+        return -1;
+    }
+
+    virtual public float GetMinRange()
+    {
+        return -1; 
     }
 
     /// <summary>
