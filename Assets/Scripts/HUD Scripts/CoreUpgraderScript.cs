@@ -8,12 +8,12 @@ public class CoreUpgraderScript : GUIWindowScripts
 
     public static int[] maxAbilityCap
     {
-        get { return new int[] { 15, 8, 15, 15 }; }
+        get { return new int[] { 10, 2, 20, 20 }; }
     }
 
     public static int[] minAbilityCap
     {
-        get { return new int[] { 6, 3, 6, 6 }; }
+        get { return new int[] { 10, 2, 20, 20 }; }
     }
 
     public GameObject optionPrefab;

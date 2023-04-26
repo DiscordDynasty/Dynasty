@@ -1,8 +1,9 @@
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 public enum AbilityID
 {
-    Unused,
+    Unused, //0
     SpeedThrust,
     ShellBoost,
     MainBullet,
@@ -12,7 +13,7 @@ public enum AbilityID
     Missile,
     Torpedo,
     Laser,
-    SpawnDrone,
+    SpawnDrone, //10
     CoreHeal,
     Energy,
     Speed,
@@ -22,7 +23,7 @@ public enum AbilityID
     ShellRegen,
     ShellMax,
     EnergyRegen,
-    EnergyMax,
+    EnergyMax, //20
     Command,
     CoreRegen,
     CoreMax,
@@ -32,7 +33,7 @@ public enum AbilityID
     PinDown,
     Retreat,
     Absorb,
-    ActiveShellRegen,
+    ActiveShellRegen, //30
     ActiveCoreRegen,
     ActiveEnergyRegen,
     Disrupt,
@@ -41,14 +42,17 @@ public enum AbilityID
     Bomb,
     Ion,
     Flak,
-    Rocket,
+    Rocket, //40
     YardWarp,
     Unload,
     HealAura,
     SpeedAura,
     EnergyAura,
     ChainBeam,
-    SpeederMissile
+    SpeederMissile, 
+    Spike, //47 - start of custom content
+    CruiserBeam,
+
 }
 
 public static class AbilityUtilities
@@ -124,6 +128,7 @@ public static class AbilityUtilities
             case 35:
             case 40:
             case 41:
+            case 48:
                 return AbilityHandler.AbilityTypes.Skills;
             case 13:
             case 17:
@@ -137,6 +142,7 @@ public static class AbilityUtilities
             case 42:
             case 43:
             case 44:
+            case 47:
                 return AbilityHandler.AbilityTypes.Passive;
             case 0:
             default:
@@ -171,7 +177,7 @@ public static class AbilityUtilities
             case 10:
                 if (string.IsNullOrEmpty(secondaryData))
                 {
-                    return "Spawns a drone.";
+                    return $"Spawns {Mathf.Ceil(tier/5)} Drone(s).";
                 }
                 DroneSpawnData data = DroneUtilities.GetDroneSpawnDataByShorthand(secondaryData);
                 return DroneUtilities.GetDescriptionByType(data.type);
@@ -204,13 +210,13 @@ public static class AbilityUtilities
             case 25:
                 return $"All weapon damage increased by {Mathf.Round(DamageBoost.damageFactor * Mathf.Max(1, tier) * 100)}%.";
             case 26:
-                return $"Instantly heals nearby allies by {AreaRestore.heal * Mathf.Max(1, tier)} shell.";
+                return $"Instantly heals nearby allies and self by {AreaRestore.heal * Mathf.Max(1, tier)} shell.";
             case 27:
                 return "Immobilizes the target.";
             case 28:
                 return "Respawn at base.";
             case 29:
-                return "Absorb damage and turn it into energy.";
+                return $"Absorb damage and turn it into energy for {0.1f * tier} seconds.";
             case 30:
                 return $"Temporarily increase shell regen by {ActiveRegen.healAmounts[0] * tier} per second.";
             case 31:
@@ -240,6 +246,10 @@ public static class AbilityUtilities
                 return $"Instant attack that deals {Beam.beamDamage * tier} damage to multiple targets.";
             case 46:
                 return $"Slow homing projectile that deals {Missile.missileDamage * tier} damage plus more if the target was moving.";
+            case 47:
+                return "Abruptly reload all of your weapons and fire them all at once.";
+            case 48:
+                return $"An energy efficient heavy hitting beam that deals {CruiserBeam.beamDamage} damage";
             default:
                 return "Description unset";
         }
@@ -353,6 +363,8 @@ public static class AbilityUtilities
                 }
             case 40:
                 return "ability_indicator_yard_warp";
+            case 47:
+                return "ability_indicator_spike";
             default:
                 return "ability_indicator";
         }
@@ -462,6 +474,10 @@ public static class AbilityUtilities
                 return "Chain Beam";
             case 46:
                 return "Speeder Missile";
+            case 47:
+                return "Spike";
+            case 48:
+                return "Cruiser Beam";
             default:
                 return "Name unset";
         }
@@ -656,6 +672,12 @@ public static class AbilityUtilities
                 break;
             case 46:
                 ability = obj.AddComponent<SpeederMissile>();
+                break;
+            case 47:
+                ability = obj.AddComponent<Spike>();
+                break;
+            case 48:
+                ability = obj.AddComponent<CruiserBeam>();
                 break;
         }
 
