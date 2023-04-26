@@ -21,10 +21,11 @@ public class ExtendedTargetingSystem
         coreTargeting = parentEntity.GetTargetingSystem().GetTarget();
     }
 
-    public Transform ReturnHighestHealth(float range, bool furthest) //Furthest functions on returns select furthest or nearest enemy if of equal health
+    public Transform ReturnHighestHealth(float range, float minRange, float minHealth, float maxHealth, bool furthest, Transform partTransform) //Furthest functions on returns select furthest or nearest enemy if of equal health
     {
         var rangeSqrd = Mathf.Pow(range, 2);
         var highestHealth = 0f;
+        var partPositionSqrd = partTransform.position.sqrMagnitude;
 
         if (coreTargeting != null && parentEntity is PlayerCore) //Allows player to select an entity to target, otherwise use the targeting system
         {
@@ -36,9 +37,13 @@ public class ExtendedTargetingSystem
             var scan = AIData.entities[i].transform;
             var scanHealth = scan.GetComponent<Entity>().GetMaxHealth()[0] + scan.GetComponent<Entity>().GetMaxHealth()[1]; //Grab max core and shell
             var scanSqrMagnitude = scan.position.sqrMagnitude;
+            var currentTargetDistanceCheck = parentPositionSqrd - scanSqrMagnitude;
+            var oldTargetDistanceCheck = parentPositionSqrd - target.position.sqrMagnitude;
+            bool withinHealthBounds = minHealth != -1 && maxHealth != -1 && minHealth < scanHealth && maxHealth > scanHealth;
+
 
             Debug.Log(highestHealth);
-            if (ValidityCheck(scan.GetComponent<Entity>()) && parentPositionSqrd - scanSqrMagnitude < rangeSqrd)
+            if (ValidityCheck(scan.GetComponent<Entity>()) && currentTargetDistanceCheck < rangeSqrd && currentTargetDistanceCheck > minRange && withinHealthBounds)
             {
                 if (scanHealth > highestHealth)
                 {
@@ -46,11 +51,11 @@ public class ExtendedTargetingSystem
                     target = scan;
                 }
 
-                if (scanHealth == highestHealth && parentPositionSqrd - scanSqrMagnitude < parentPositionSqrd - target.position.sqrMagnitude && !furthest) //Grab nearest comparison
+                if (scanHealth == highestHealth && currentTargetDistanceCheck < oldTargetDistanceCheck && !furthest) //Grab nearest comparison
                 {
                     target = scan;
                 }
-                else if (scanHealth == highestHealth && parentPositionSqrd - scanSqrMagnitude > parentPositionSqrd - target.position.sqrMagnitude) //Grab furthest comparison
+                else if (scanHealth == highestHealth && currentTargetDistanceCheck > oldTargetDistanceCheck) //Grab furthest comparison
                 {
                     target = scan;
                 }
@@ -59,10 +64,11 @@ public class ExtendedTargetingSystem
         return target;
     }
 
-    public Transform ReturnHighestCurrentHealth(float range, bool furthest)
+    public Transform ReturnHighestCurrentHealth(float range, float minRange, float minHealth, float maxHealth, bool furthest, Transform partTransform)
     {
         var rangeSqrd = Mathf.Pow(range, 2);
         var highestHealth = 0f;
+        var partPositionSqrd = partTransform.position.sqrMagnitude;
 
         if (coreTargeting != null && parentEntity is PlayerCore)
         {
@@ -74,8 +80,11 @@ public class ExtendedTargetingSystem
             var scan = AIData.entities[i].transform;
             var scanHealth = scan.GetComponent<Entity>().GetHealth()[0] + scan.GetComponent<Entity>().GetHealth()[1]; //Grab current core and shell
             var scanSqrMagnitude = scan.position.sqrMagnitude;
+            var currentTargetDistanceCheck = partPositionSqrd - scanSqrMagnitude;
+            var oldTargetDistanceCheck = partPositionSqrd - target.position.sqrMagnitude;
+            bool withinHealthBounds = minHealth != -1 && maxHealth != -1 && minHealth <= scanHealth && maxHealth >= scanHealth;
 
-            if (ValidityCheck(scan.GetComponent<Entity>()) && parentPositionSqrd - scanSqrMagnitude < rangeSqrd)
+            if (ValidityCheck(scan.GetComponent<Entity>()) && currentTargetDistanceCheck < rangeSqrd && currentTargetDistanceCheck > minRange && withinHealthBounds)
             {
                 if (scanHealth > highestHealth)
                 {
@@ -83,11 +92,11 @@ public class ExtendedTargetingSystem
                     target = scan;
                 }
 
-                if (scanHealth == highestHealth && parentPositionSqrd - scanSqrMagnitude < parentPositionSqrd - target.position.sqrMagnitude && !furthest)
+                if (scanHealth == highestHealth && currentTargetDistanceCheck < oldTargetDistanceCheck && !furthest)
                 {
                     target = scan;
                 }
-                else if (scanHealth == highestHealth && parentPositionSqrd - scanSqrMagnitude > parentPositionSqrd - target.position.sqrMagnitude)
+                else if (scanHealth == highestHealth && currentTargetDistanceCheck > oldTargetDistanceCheck)
                 {
                     target = scan;
                 }
@@ -96,10 +105,11 @@ public class ExtendedTargetingSystem
         return target;
     }
 
-    public Transform ReturnLoestHealth(float range, bool furthest)
+    public Transform ReturnLoestHealth(float range, float minRange, float minHealth, float maxHealth, bool furthest, Transform partTransform)
     {
         var rangeSqrd = Mathf.Pow(range, 2);
         var lowestHealth = 0f;
+        var partPositionSqrd = partTransform.position.sqrMagnitude;
 
         if (coreTargeting != null && parentEntity is PlayerCore)
         {
@@ -111,8 +121,11 @@ public class ExtendedTargetingSystem
             var scan = AIData.entities[i].transform;
             var scanHealth = scan.GetComponent<Entity>().GetMaxHealth()[0] + scan.GetComponent<Entity>().GetMaxHealth()[1];
             var scanSqrMagnitude = scan.position.sqrMagnitude;
+            var currentTargetDistanceCheck = partPositionSqrd - scanSqrMagnitude;
+            var oldTargetDistanceCheck = partPositionSqrd - target.position.sqrMagnitude;
+            bool withinHealthBounds = minHealth != -1 && maxHealth != -1 && minHealth <= scanHealth && maxHealth >= scanHealth;
 
-            if (ValidityCheck(scan.GetComponent<Entity>()) && parentPositionSqrd - scanSqrMagnitude < rangeSqrd)
+            if (ValidityCheck(scan.GetComponent<Entity>()) && currentTargetDistanceCheck < rangeSqrd && currentTargetDistanceCheck > minRange && withinHealthBounds)
             {
                 if (scanHealth < lowestHealth)
                 {
@@ -120,11 +133,11 @@ public class ExtendedTargetingSystem
                     target = scan;
                 }
 
-                if (scanHealth == lowestHealth && parentPositionSqrd - scanSqrMagnitude < parentPositionSqrd - target.position.sqrMagnitude && !furthest)
+                if (scanHealth == lowestHealth && currentTargetDistanceCheck < oldTargetDistanceCheck && !furthest)
                 {
                     target = scan;
                 }
-                else if (scanHealth == lowestHealth && parentPositionSqrd - scanSqrMagnitude > parentPositionSqrd - target.position.sqrMagnitude)
+                else if (scanHealth == lowestHealth && currentTargetDistanceCheck > oldTargetDistanceCheck)
                 {
                     target = scan;
                 }
@@ -133,10 +146,11 @@ public class ExtendedTargetingSystem
         return target;
     }
 
-    public Transform ReturnLowestCurrentHealth(float range, bool furthest)
+    public Transform ReturnLowestCurrentHealth(float range, float minRange, float minHealth, float maxHealth, bool furthest, Transform partTransform)
     {
         var rangeSqrd = Mathf.Pow(range, 2);
         var lowestHealth = 0f;
+        var partPositionSqrd = partTransform.position.sqrMagnitude;
 
         if (coreTargeting != null && parentEntity is PlayerCore)
         {
@@ -148,8 +162,11 @@ public class ExtendedTargetingSystem
             var scan = AIData.entities[i].transform;
             var scanHealth = scan.GetComponent<Entity>().GetHealth()[0] + scan.GetComponent<Entity>().GetHealth()[1];
             var scanSqrMagnitude = scan.position.sqrMagnitude;
+            var currentTargetDistanceCheck = partPositionSqrd - scanSqrMagnitude;
+            var oldTargetDistanceCheck = partPositionSqrd - target.position.sqrMagnitude;
+            bool withinHealthBounds = minHealth != -1 && maxHealth != -1 && minHealth <= scanHealth && maxHealth >= scanHealth;
 
-            if (ValidityCheck(scan.GetComponent<Entity>()) && parentPositionSqrd - scanSqrMagnitude < rangeSqrd)
+            if (ValidityCheck(scan.GetComponent<Entity>()) && currentTargetDistanceCheck < rangeSqrd && currentTargetDistanceCheck > minRange && withinHealthBounds)
             {
                 if (scanHealth < lowestHealth)
                 {
@@ -157,11 +174,11 @@ public class ExtendedTargetingSystem
                     target = scan;
                 }
 
-                if (scanHealth == lowestHealth && parentPositionSqrd - scanSqrMagnitude < parentPositionSqrd - target.position.sqrMagnitude && !furthest)
+                if (scanHealth == lowestHealth && currentTargetDistanceCheck < oldTargetDistanceCheck && !furthest)
                 {
                     target = scan;
                 }
-                else if (scanHealth == lowestHealth && parentPositionSqrd - scanSqrMagnitude > parentPositionSqrd - target.position.sqrMagnitude)
+                else if (scanHealth == lowestHealth && currentTargetDistanceCheck > oldTargetDistanceCheck)
                 {
                     target = scan;
                 }
@@ -170,14 +187,19 @@ public class ExtendedTargetingSystem
         return target;
     }
 
-    public Transform ReturnFarthest(float range)
+    public Transform ReturnFarthest(float range, float minRange, float minHealth, float maxHealth, Transform partTransform)
     {
+        var partPositionSqrd = partTransform.position.sqrMagnitude;
         for (int i = 0; AIData.entities.Count > i; i++)
         {
             var scan = AIData.entities[i].transform;
             var scanSqrMagnitude = scan.position.sqrMagnitude;
+            var distanceCheck = partPositionSqrd - scanSqrMagnitude;
+            var oldTargetDistanceCheck = partPositionSqrd - target.position.sqrMagnitude;
+            var scanHealth = scan.GetComponent<Entity>().GetHealth()[0] + scan.GetComponent<Entity>().GetHealth()[1];
+            bool withinHealthBounds = minHealth != -1 && maxHealth != -1 && minHealth <= scanHealth && maxHealth >= scanHealth;
 
-            if (parentPositionSqrd - scanSqrMagnitude > parentPositionSqrd - target.position.sqrMagnitude)
+            if (distanceCheck > oldTargetDistanceCheck && distanceCheck < range && distanceCheck > minRange && withinHealthBounds)
             {
                 target = scan;
             }
