@@ -104,6 +104,14 @@ public class AbilityButtonScript : MonoBehaviour, IPointerClickHandler, IPointer
         {
             description += $"\nRange: {ability.GetRange()}";
         }
+        if (ability.GetShootdownRange() > 0)
+        {
+            description += $"\nShootdown Range {ability.GetShootdownRange()}";
+        }
+        if (ability.GetMinRange() > 0)
+        {
+            description += $"\nMinimum Range {ability.GetMinRange()}";
+        }
 
         if (ability is WeaponAbility weaponAbility)
         {
@@ -355,6 +363,38 @@ public class AbilityButtonScript : MonoBehaviour, IPointerClickHandler, IPointer
         if (tooltip)
         {
             PollRangeCircle();
+            PollShootdownRangeCircle();
+        }
+    }
+
+    void PollShootdownRangeCircle()
+    {
+        foreach (var ability in abilities)
+        {
+            if (ability.GetShootdownRange() > 0 && circles.ContainsKey(ability))
+            {
+                if (ability.IsDestroyed())
+                {
+                    circles[ability].enabled = false;
+                    continue;
+                }
+                else
+                {
+                    circles[ability].enabled = true;
+                }
+
+                circles[ability].color = ability.TimeUntilReady() > 0 ? Color.magenta : PlayerCore.GetPlayerFactionColor();
+                var range = ability.GetShootdownRange();
+                var cameraPos = CameraScript.instance.transform.position;
+                cameraPos.z = 0;
+                range = Camera.main.WorldToScreenPoint(cameraPos + new Vector3(0, range)).y - Camera.main.WorldToScreenPoint(cameraPos).y;
+                range *= UIScalerScript.GetScale() * 2;
+
+                circles[ability].rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(ability.transform.position) * UIScalerScript.GetScale();
+                circles[ability].rectTransform.sizeDelta = new Vector2(range, range);
+                //Debug.Log(Camera.main.ScreenToWorldPoint((Vector3)rangeCircle.rectTransform.anchoredPosition +
+                //    new Vector3(0,range / 2,CameraScript.zLevel) ) - abilities[0].transform.position);
+            }
         }
     }
 
