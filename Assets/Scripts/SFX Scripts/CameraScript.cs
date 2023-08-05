@@ -15,7 +15,7 @@ public class CameraScript : MonoBehaviour
     public static Vector3 target;
     public static float velocityFactor;
 
-    public static float zLevel = 10;
+    public static float zLevel = 50;
     public EventSystem eventSystem;
     public Camera minimapCamera;
 
@@ -55,10 +55,10 @@ public class CameraScript : MonoBehaviour
     {
         if (!PlayerCore.Instance)
         {
-            return 10;
+            return 50;
         }
 
-        return 10 + 2.5F * (1 +
+        return 50 + 2.5F * (1 +
                             CoreUpgraderScript.GetCoreTier(PlayerCore.Instance.blueprint.coreShellSpriteID));
     }
 

@@ -20,8 +20,8 @@ public class PinDown : ActiveAbility
         base.Awake(); // base awake
         // hardcoded values here
         ID = AbilityID.PinDown;
-        energyCost = 100f;
-        cooldownDuration = 10f;
+        energyCost = 10f;
+        cooldownDuration = 0.1f;
         activeDuration = PINDOWN_ACTIVE_DURATION;
     }
 
@@ -67,14 +67,14 @@ public class PinDown : ActiveAbility
     /// </summary>
     protected override void Execute()
     {
-        target = Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, 0, -1, -1, false, this.transform).GetComponent<Entity>() as Craft;
-        if (target != null)
+
+        if (Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, 2, -1, -1, false, this.transform).GetComponent<Entity>() as Craft != null)
         {
+            target = Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, 2, -1, -1, false, this.transform).GetComponent<Entity>() as Craft;
             target.AddPin();
             InflictionCosmetic(target, Core.faction);
             if (target.networkAdapter) target.networkAdapter.InflictionCosmeticClientRpc((int)AbilityID.PinDown);
         }
-
         base.Execute();
     }
 
