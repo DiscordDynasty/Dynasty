@@ -19,6 +19,8 @@ public enum WeaponDiversityType
 public abstract class WeaponAbility : ActiveAbility
 {
     protected float range; // the range of the ability
+    protected float minRange;
+    protected float shootdownRange;
     protected float damage;
     protected WeaponTargetingSystem targetingSystem;
     public Entity.TerrainType terrain = Entity.TerrainType.Unset;
@@ -140,6 +142,16 @@ public abstract class WeaponAbility : ActiveAbility
         return range; // get range
     }
 
+    public override float GetMinRange()
+    {
+        return minRange;
+    }
+
+    public override float GetShootdownRange()
+    {
+        return shootdownRange;
+    }
+
     /// <summary>
     /// Enable / disable the weapon ability
     /// </summary>
@@ -258,7 +270,7 @@ public abstract class WeaponAbility : ActiveAbility
 
     protected virtual bool DistanceCheck(Transform targetEntity)
     {
-        return Vector2.SqrMagnitude(transform.position - targetEntity.position) <= GetRange() * GetRange();
+        return Vector2.SqrMagnitude(transform.position - targetEntity.position) <= Mathf.Pow(GetRange(), 2) && Vector2.SqrMagnitude(transform.position - targetEntity.position) >= Mathf.Pow(GetMinRange(), 2);
     }
 
     /// <summary>

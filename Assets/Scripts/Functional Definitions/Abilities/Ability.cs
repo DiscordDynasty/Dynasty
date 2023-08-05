@@ -154,7 +154,7 @@ public abstract class Ability : MonoBehaviour
     protected virtual void Awake()
     {
         State = AbilityState.Ready;
-        startTime = -100f; // 0 would trigger the ability at start
+        startTime = -200f; // 0 would trigger the ability at start
     }
 
     protected virtual void Start()

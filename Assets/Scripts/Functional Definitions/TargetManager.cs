@@ -220,7 +220,7 @@ public class TargetManager : MonoBehaviour
                     }
 
                     var ability = tsAbility;
-                    if (ability != null && sqrD >= ability.GetRange() * ability.GetRange())
+                    if (ability != null && sqrD >= ability.GetRange() * ability.GetRange() && sqrD <= Mathf.Pow(ability.GetMinRange(), 2))
                     {
                         continue;
                     }

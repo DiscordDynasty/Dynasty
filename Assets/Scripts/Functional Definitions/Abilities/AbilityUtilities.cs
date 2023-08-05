@@ -52,6 +52,8 @@ public enum AbilityID
     SpeederMissile, 
     Spike, //47 - start of custom content
     CruiserBeam,
+    CruiserBullet,
+
 
 }
 

@@ -25,12 +25,12 @@ public class CruiserBeam : WeaponAbility
         damage = beamDamage;
         energyCost = 50;
         ID = AbilityID.CruiserBeam;
-        range = 50;
+        range = 30;
         category = Entity.EntityCategory.All;
-        bonusDamageType = typeof(ShellCore);
-        cooldownDuration = 120f;
+        cooldownDuration = 1f;
         targetArray = new List<Transform>();
         line.positionCount = 0;
+        minRange = 20;
     }
 
     protected void SetUpCosmetics()
@@ -118,8 +118,14 @@ public class CruiserBeam : WeaponAbility
         }
         targetArray.Clear();
         targetArray.Add(targetingSystem.GetTarget());
-        FireBeam(ReturnPrioritizedTarget().position);
-        return true;
+        if (ReturnPrioritizedTarget() != null)
+        {
+            FireBeam(ReturnPrioritizedTarget().position);
+            return true;
+        }
+
+        return false;
+
     }
 
     public override void ActivationCosmetic(Vector3 targetPos)
@@ -128,7 +134,7 @@ public class CruiserBeam : WeaponAbility
         {
             SetUpCosmetics();
         }
-        AudioManager.PlayClipByID("clip_beam", transform.position);
+        AudioManager.PlayClipByID("clip_cruiserbeam", transform.position);
         if (MasterNetworkAdapter.lettingServerDecide && targetingSystem.GetTarget() && targetingSystem.GetTarget().GetComponentInParent<Entity>())
         {
             GetClosestPart(targetingSystem.GetTarget().GetComponentInParent<Entity>().NetworkGetParts().ToArray());
@@ -232,15 +238,19 @@ public class CruiserBeam : WeaponAbility
         Transform coreTargeting = Core.GetTargetingSystem().GetTarget();
         if (coreTargeting != null && Core is PlayerCore)
         {
-            return coreTargeting;
+            if (coreTargeting.position.sqrMagnitude < rangePow && coreTargeting.position.sqrMagnitude > Mathf.Pow(1, 2))
+            {
+                return coreTargeting;
+            }
         }
         for (int i = 0; AIData.entities.Count > i; i++)
         {
             var scan = AIData.entities[i].transform;
             var scanHealth = scan.GetComponent<Entity>().GetMaxHealth()[0] + scan.GetComponent<Entity>().GetMaxHealth()[1];
-            if (ValidityCheck(scan.GetComponent<Entity>()) && core - scan.position.sqrMagnitude < rangePow)
+
+            if (ValidityCheck(scan.GetComponent<Entity>()) && part.transform.position.sqrMagnitude - scan.position.sqrMagnitude < rangePow)
             {
-                if (scanHealth > highestHealth)
+                if (scanHealth > highestHealth && part.transform.position.sqrMagnitude - scan.position.sqrMagnitude > minRange && part.transform.position.sqrMagnitude - scan.position.sqrMagnitude < range)
                 {
                     highestHealth = scanHealth;
                     target = scan;
@@ -251,6 +261,7 @@ public class CruiserBeam : WeaponAbility
                 }
             }
         }
+        Debug.Log(target);
         return target;
     }
 

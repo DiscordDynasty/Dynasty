@@ -79,7 +79,7 @@ public class SpawnDrone : ActiveAbility
         AudioManager.PlayClipByID("clip_respawn", transform.position);
 
         // Spawn the drone
-        for (int i = 0; i < Mathf.Ceil(abilityTierf/5); i++)
+        for (int i = 0; i < Mathf.Ceil(abilityTierf/2); i++)
         {
             if (craft is PlayerCore player && craft.GetUnitsCommanding().Count + 1 > craft.GetTotalCommandLimit())
             {

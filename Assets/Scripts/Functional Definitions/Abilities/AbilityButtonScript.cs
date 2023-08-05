@@ -106,11 +106,11 @@ public class AbilityButtonScript : MonoBehaviour, IPointerClickHandler, IPointer
         }
         if (ability.GetShootdownRange() > 0)
         {
-            description += $"\nShootdown Range {ability.GetShootdownRange()}";
+            description += $"\nShootdown Range: {ability.GetShootdownRange()}";
         }
         if (ability.GetMinRange() > 0)
         {
-            description += $"\nMinimum Range {ability.GetMinRange()}";
+            description += $"\nMinimum Range: {ability.GetMinRange()}";
         }
 
         if (ability is WeaponAbility weaponAbility)

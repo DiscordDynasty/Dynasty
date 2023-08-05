@@ -719,6 +719,8 @@ MonoBehaviour:
     obj: {fileID: 21300000, guid: 6da4a4cb24ffb7f428510a5b583aa831, type: 3}
   - ID: clip_cruiserbullet
     obj: {fileID: 8300000, guid: 3b3d54be724ebbc4d8fcc11972a12374, type: 3}
+  - ID: cruiserbullet_prefab
+    obj: {fileID: 3700707027479668959, guid: f8447826d09c80e4fa5957e18b3c6a14, type: 3}
   - ID: AbilitySprite50
     obj: {fileID: 21300000, guid: d7cbcf8e6bdc6f24986742c2cb045478, type: 3}
   - ID: clip_cruisercannon
