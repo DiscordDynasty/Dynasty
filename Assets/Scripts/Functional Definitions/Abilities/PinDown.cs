@@ -145,6 +145,6 @@ public class PinDown : ActiveAbility
     }*/
     bool ValidityCheck(Entity ent)
     {
-        return (!ent.GetIsDead() && !FactionManager.IsAllied(ent.faction, parentEntity.faction) && !ent.IsInvisible);
+        return (!ent.GetIsDead() && !FactionManager.IsAllied(ent.faction, Core.faction) && !ent.IsInvisible);
     }
 }
