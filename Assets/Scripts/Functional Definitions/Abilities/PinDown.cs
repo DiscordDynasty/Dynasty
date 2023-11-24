@@ -67,44 +67,15 @@ public class PinDown : ActiveAbility
     /// </summary>
     protected override void Execute()
     {
-        ActivationCosmetic(transform.position);
-        target = null;
-        float minDist = Mathf.Pow(range, 2);
-        var targetTransform = Core.GetTargetingSystem().GetTarget();
 
-        if (targetTransform)
+        if (Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, 2, -1, -1, false, this.transform).GetComponent<Entity>() as Craft != null)
         {
-            var targetTransformDist = (targetTransform.position - Core.transform.position).sqrMagnitude;
-            if (targetTransformDist < minDist && ValidityCheck(targetTransform.GetComponent<Entity>()))
-            {
-                target = targetTransform.GetComponent<Entity>() as Craft;
-            }
-        }
-
-
-        if (!target)
-            for (int i = 0; i < AIData.entities.Count; i++)
-            {
-                if (ValidityCheck(AIData.entities[i]))
-                {
-                    float d = (Core.transform.position - AIData.entities[i].transform.position).sqrMagnitude;
-                    if (d < minDist)
-                    {
-                        minDist = d;
-                        target = AIData.entities[i] as Craft;
-                    }
-                }
-            }
-
-        if (target != null)
-        {
+            target = Core.GetExtendedTargetingSystem().ReturnHighestHealth(range, 2, -1, -1, false, this.transform).GetComponent<Entity>() as Craft;
             target.AddPin();
             InflictionCosmetic(target, Core.faction);
             if (target.networkAdapter) target.networkAdapter.InflictionCosmeticClientRpc((int)AbilityID.PinDown);
         }
-
         base.Execute();
-
     }
 
 
@@ -143,8 +114,5 @@ public class PinDown : ActiveAbility
     {
         return (ent is Craft && !ent.GetIsDead() && !FactionManager.IsAllied(ent.faction, Core.faction) && !ent.IsInvisible);
     }*/
-    bool ValidityCheck(Entity ent)
-    {
-        return (!ent.GetIsDead() && !FactionManager.IsAllied(ent.faction, Core.faction) && !ent.IsInvisible);
-    }
+
 }
